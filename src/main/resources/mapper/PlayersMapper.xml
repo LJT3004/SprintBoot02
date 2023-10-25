@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.dao.PlayersMapper">
+    <select id="playersList" resultType="Players">
+        select p.pid,p.pname,p.birthday,p.height,p.weight,p.position,c.cname
+        from players p,clubs c where p.cid=c.cid
+        <if test="pname!=null and pname!=''">
+            and p.pname like CONCAT('%',#{pname},'%')
+        </if>
+        <if test="cid!=null and cid!=0">
+            and p.cid=#{cid}
+        </if>
+        LIMIT #{currPageNo},#{pageSize}
+    </select>
+    <select id="findCount" resultType="int">
+        select count(*)
+        from players
+        <where>
+            <if test="pname!=null and pname!=''">
+                and pname like CONCAT('%',#{pname},'%')
+            </if>
+            <if test="cid!=null and cid!=0">
+                and cid=#{cid}
+            </if>
+        </where>
+    </select>
+    <insert id="add" parameterType="Players">
+        insert into players(pname,birthday,height,weight,position,cid) values (#{pname},#{birthday},#{height},#{weight},#{position},#{cid});
+    </insert>
+    <delete id="delete" parameterType="int">
+        delete
+        from players
+        where pid=#{pid};
+    </delete>
+</mapper>

@@ -1,0 +1,19 @@
+server:
+  8080
+spring:
+  redis:
+    port: 6379
+    host: 127.0.0.1
+  mvc:
+    static-path-pattern: /static/**
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/nbaplayers?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+  thymeleaf:
+    encoding: UTF-8
+    cache: false
+mybatis:
+  type-aliases-package: cn.bdqn.pojo
+  mapper-locations: mapper/*Mapper.xml

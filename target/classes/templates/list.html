@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center>
+    <form action="/players/selectAll">
+        姓名：<input type="text" name="pname"><br>
+        球队：<select name="cid">
+                <option value="0">请选择：</option>
+                <option th:each="clubs:${clubsList}" th:text="${clubs.cname}" th:value="${clubs.cid}"></option>
+             </select>
+        <br>
+        <input type="submit" value="提交">
+        <input type="reset" value="重置">
+    </form>
+    <table border="1" width="800px">
+        <tr>
+            <td>球员编号</td>
+            <td>球员姓名</td>
+            <td>球员生日</td>
+            <td>球员身高</td>
+            <td>球员体重</td>
+            <td>球员位置</td>
+            <td>球员队伍</td>
+        </tr>
+        <tr th:each="players:${pageBean.listc}">
+            <td th:text="${players.pid}"></td>
+            <td th:text="${players.pname}"></td>
+            <td th:text="${#dates.format(players.birthday,'yyyy-MM-dd')}"></td>
+            <td th:text="${players.height}"></td>
+            <td th:text="${players.weight}"></td>
+            <td th:text="${players.position}"></td>
+            <td th:text="${players.cname}"></td>
+            <td>
+                <a href="javascript:void(0)" th:onclick="|del(${players.pid})|">Delete</a>
+            </td>
+        </tr>
+        <button onclick="add()">添加</button>
+    </table>
+    <a th:href="@{/players/selectAll?currPageNo=1}">首页</a>
+    <a th:if="${pageBean.currPageNo!=1}" th:href="@{/players/selectAll(currPageNo=${pageBean.currPageNo}-1)}">上一页</a>
+    <a th:if="${pageBean.currPageNo!=pageBean.totalPageCount}" th:href="@{/players/selectAll(currPageNo=${pageBean.currPageNo+1})}">下一页</a>
+    <a th:href="@{/players/selectAll(currPageNo=${pageBean.totalPageCount})}">尾页</a>
+</center>
+<script src="/static/js/jquery-1.12.4.js"></script>
+<script>
+    function add(){
+        location.href="/players/toadd";
+    }
+    function del(pid){
+        var flag=confirm("确认要删除吗？");
+        if (flag){
+            $.ajax({
+               url:"/players/delete",
+               data:{"pid":pid},
+               dataType:"text",
+               type:"GET",
+                success:function (result){
+                   if (result=="true"){
+                        location.href="/players/selectAll";
+                        alert("删除成功！");
+                   }else {
+                        alert("删除失败！");
+                   }
+                }
+            });
+        }else {
+            alert("您已取消该操作！");
+        }
+    }
+</script>
+</body>
+</html>

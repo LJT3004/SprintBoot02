@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center>
+    <form>
+        姓名：<input type="text" name="pname" id="pname"><br>
+        出生时间:<input type="text" name="birthday" id="birthday"><br>
+        球员身高:<input type="text" name="height" id="height"><br>
+        球员体重:<input type="text" name="weight" id="weight"><br>
+        球员位置:
+        <input type="radio" name="position" value="控球后卫">控球后卫
+        <input type="radio" name="position" value="得分后卫">得分后卫
+        <input type="radio" name="position" value="小前锋">小前锋
+        <input type="radio" name="position" value="大前锋">大前锋
+        <input type="radio" name="position" value="中锋">中锋
+        <br>
+        球队：<select name="cid">
+        <option value="0">请选择：</option>
+        <option th:value="${clubs.cid}" th:text="${clubs.cname}" th:each="clubs:${clubsList}"></option>
+    </select>
+        <br>
+        相关操作：
+        <input type="button" value="添加" onclick="add()">
+        <input type="button" value="重置">
+    </form>
+    <script src="/static/js/jquery-1.12.4.js"></script>
+    <script type="text/javascript">
+        function add(){
+            var $infos=$("form").find(":input");//获取所有表单元素
+            var array=$infos.serializeArray();//将表单元素编码成数组格式
+            var stringInfos=$.param(array);//数组序列化成字符串
+            $.ajax({
+                url:"/players/add",
+                data:stringInfos,
+                dataType:"text",
+                type:"post",
+                success:function (result){
+                    if (result=="true"){
+                        alert("添加成功！");
+                        location.href="/players/selectAll";
+                    }else {
+                        alert("添加失败！");
+                    }
+                }
+            });
+        }
+    </script>
+</center>
+</body>
+</html>
